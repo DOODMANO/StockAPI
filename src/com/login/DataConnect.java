@@ -17,6 +17,7 @@ public class DataConnect {
 		this.con = con;
 	}
 
+	/*
     public static Connection getConnection() {
         try {
             Class.forName("com.mysql.jdbc.Driver");
@@ -26,7 +27,7 @@ public class DataConnect {
             System.out.println("Database.getConnection() Error -->" + ex.getMessage());
             return null;
         }
-    }
+    }*/
 	
 	
 	private DataConnect()

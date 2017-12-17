@@ -184,8 +184,9 @@ public class StockApiBean {
         try {
             //System.out.println("symbol: " + this.symbol + ", price: " + this.price + "\n");
             //System.out.println("qty: " + this.qty + ", amt: " + this.amt + "\n");
-
-            Connection conn = DataConnect.getConnection();
+        	DataConnect db = null;
+        	db = DataConnect.getInstance();
+            Connection conn = db.getCon();
             Statement statement = conn.createStatement();
             
             //get userid
@@ -202,7 +203,7 @@ public class StockApiBean {
                     + "VALUES (NULL,'" + uid + "','" + symbol + "','" + qty + "','" + price + "','" + amt +"')");
             
             statement.close();
-            conn.close();
+            //conn.close();
             FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(FacesMessage.SEVERITY_INFO, "Successfully purchased stock",""));
         } catch (SQLException e) {
             e.printStackTrace();

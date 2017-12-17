@@ -33,7 +33,9 @@ public class Purchase extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         try {
-            Connection conn = DataConnect.getConnection();
+        	DataConnect db = null;
+        	db = DataConnect.getInstance();
+            Connection conn = db.getCon();
             Statement statement = conn.createStatement();
             String symbol = request.getParameter("symbol");
             String price = request.getParameter("price");
@@ -42,7 +44,7 @@ public class Purchase extends HttpServlet {
             statement.executeUpdate("insert into purchase (`uid`,`stock_symbol`,`qty`,`price`,`amt`)	VALUES "
                     + "(1111,'" + symbol + "','" + qty + "','" + price + "','" + (amt) + "')");
             statement.close();
-            conn.close();
+            //conn.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }

@@ -24,7 +24,7 @@
                                 <p>Welcome to the Admin Page, #{userBean.username}</p>
                             </h:panelGroup>
                         </span>
-                        <span style="float:right;"><h:link value="Logout" outcome="index" style="text-align: right;"/></span>
+                        <span style="float:right;"><h:commandLink value="Logout" action="#{userBean.logout()}" style="text-align: right;"/></span>
                     </div>
                 </div>
             </h:form>

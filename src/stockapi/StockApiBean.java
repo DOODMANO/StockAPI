@@ -70,6 +70,7 @@ public class StockApiBean {
     }
     
     private String getRequestParameter(String name) {
+    	//already a problem here?
         return ((HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest()).getParameter(name);
     }
 
@@ -245,7 +246,8 @@ public class StockApiBean {
         String symbol = this.selectedSymbol;
         String interval = this.selectedInterval;
         String url = "https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&symbol=" + symbol + "&interval=" + interval + "&apikey=" + API_KEY;
-
+        //String symbolWatch = "";
+        
         this.table1Markup += "URL::: <a href='" + url + "'>Data Link</a><br>";
         InputStream inputStream = new URL(url).openStream();
 
@@ -260,6 +262,7 @@ public class StockApiBean {
                 this.table1Markup += "<table>";
                 this.table1Markup += "<tr><td>Information</td><td>" + jsob.getString("1. Information") + "</td></tr>";
                 this.table1Markup += "<tr><td>Symbol</td><td>" + jsob.getString("2. Symbol") + "</td></tr>";
+                //symbolWatch = jsob.getString("2. Symbol");
                 this.table1Markup += "<tr><td>Last Refreshed</td><td>" + jsob.getString("3. Last Refreshed") + "</td></tr>";
                 this.table1Markup += "<tr><td>Interval</td><td>" + jsob.getString("4. Interval") + "</td></tr>";
                 this.table1Markup += "<tr><td>Output Size</td><td>" + jsob.getString("5. Output Size") + "</td></tr>";
@@ -285,6 +288,8 @@ public class StockApiBean {
                     if (i == 0) {
                         String path = FacesContext.getCurrentInstance().getExternalContext().getRequestContextPath();
                         this.table2Markup += "<td><a class='btn btn-success' href='" + path + "/faces/purchase.xhtml?symbol=" + symbol + "&price=" + subJsonObj.getString("4. close") + "'>Buy Stock</a></td>";
+                        this.table2Markup += "<td><a class='btn btn-success' href='" + path + "/faces/watch.xhtml?symbol=" + symbol + "&price=" + subJsonObj.getString("4. close") + "'>Watch Stock</a></td>";
+                        //System.out.println("we syombo is " + symbolWatch);
                     }
                     this.table2Markup += "</tr>";
                     i++;

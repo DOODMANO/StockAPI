@@ -21,7 +21,7 @@
                     <div class="col-md-12 col-sm-12 col-lg-12" style="width:100%;text-align:right">
                         <span style="float:left;">
                             <h:panelGroup rendered="#{not empty userBean.username}">
-                                <p>Welcome, Admin #{userBean.username}</p>
+                                <p>Welcome to the Admin Page, #{userBean.username}</p>
                             </h:panelGroup>
                         </span>
                         <span style="float:right;"><h:link value="Logout" outcome="index" style="text-align: right;"/></span>
@@ -30,32 +30,68 @@
             </h:form>
 
             <div class="well">
-                <legend>Search Data</legend>
-
-                <div class="row">
-
-                    <h:form>
-                        <label for="sel1">Stock: </label>
-                        <h:selectOneMenu id="symbol" value="#{stockApiBean.selectedSymbol}">
-                            <f:selectItems value="#{stockApiBean.availableSymbols}" />
-                        </h:selectOneMenu>
-
-                        <label for="sel1">Interval: </label>
-                        <h:selectOneMenu id="interval" value="#{stockApiBean.selectedInterval}">
-                            <f:selectItems value="#{stockApiBean.availableIntervals}" />
-                        </h:selectOneMenu>
-                        <br />
-                        <h:commandButton value="Get Data" action="#{stockApiBean.timeseries}" styleClass="btn btn-success" />
-                    </h:form>
-                </div>
-
-                <h:panelGroup rendered="#{not empty stockApiBean.table1Markup}">
-                    <h:outputText value="#{stockApiBean.table1Markup}" escape="false" styleClass="preformatted" />
-                </h:panelGroup>
-
-                <h:panelGroup rendered="#{not empty stockApiBean.table2Markup}">
-                    <h:outputText value="#{stockApiBean.table2Markup}" escape="false" styleClass="preformatted" />
-                </h:panelGroup>
+                <legend>Managers Pending Registration</legend>
+               		<h:form id="buttonable">
+					<h:dataTable value="#{registerBean.viewManagerRegister()}" var = "manager" border="3">
+					
+					<h:column>
+					<f:facet name="header">
+					First Name
+					</f:facet>
+					#{manager.firstname}
+					</h:column>
+					
+					<h:column>
+					<f:facet name="header">
+					Last Name
+					</f:facet>
+					#{manager.lastname}
+					</h:column>
+					
+					<h:column>
+					<f:facet name="header">
+					Address
+					</f:facet>
+					#{manager.address}
+					</h:column>
+					
+					<h:column>
+					<f:facet name="header">
+					Phone Number
+					</f:facet>
+					#{manager.phonenumber}
+					</h:column>					
+					
+					<h:column>
+					<f:facet name="header">
+					Email
+					</f:facet>
+					#{manager.email}
+					</h:column>					
+					
+					<h:column>
+					<f:facet name="header">
+					Username
+					</f:facet>
+					#{manager.username}
+					</h:column>					
+					
+					<h:column>
+					<f:facet name="header">
+					Accept
+					</f:facet>
+					<h:commandButton value = "Accept" action="#{registerBean.acceptManager(manager.username, manager.password, manager.firstname, manager.lastname, manager.address, manager.phonenumber, manager.email, manager.uid)}" styleClass="btn btn-success btn-login-submit"/>
+					</h:column>	
+					
+					<h:column>
+					<f:facet name="header">
+					Reject
+					</f:facet>
+					<h:commandButton value = "Reject" action="#{registerBean.rejectManager(manager.uid)}" styleClass="btn btn-success btn-login-submit"/>
+					</h:column>						
+					
+					</h:dataTable>
+					</h:form>
             </div>
         </div>
     </h:body>

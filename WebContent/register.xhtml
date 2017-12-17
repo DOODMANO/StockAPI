@@ -31,12 +31,12 @@
                 </div>
                 
                 <div class="form-group">
-                    <h:outputLabel value="Firstname"/>
+                    <h:outputLabel value="First Name"/>
                     <h:inputText id="firstname" class="form-control" value="#{registerBean.firstname}" required="true" requiredMessage="Please enter First Name" p:placeholder="First Name" styleClass="form-control" />
                 </div>
 
                 <div class="form-group">
-                    <h:outputLabel value="Lastname"/>
+                    <h:outputLabel value="Last Name"/>
                     <h:inputText id="lastname" class="form-control" value="#{registerBean.lastname}" required="true" requiredMessage="Please enter Last Name" p:placeholder="Last Name" styleClass="form-control" />
                 </div>
 				
@@ -46,7 +46,7 @@
                 </div>
 
                 <div class="form-group">
-                    <h:outputLabel value="Phonenumber"/>
+                    <h:outputLabel value="Phone Number"/>
                     <h:inputText id="phonenumber" class="form-control" value="#{registerBean.phonenumber}" required="true" requiredMessage="Please enter Phone Number" p:placeholder="Phone Number" styleClass="form-control" />
                 </div>
                 
@@ -56,6 +56,8 @@
                 </div>                
                 
 				<div class="form-group">
+					<h:outputLabel value="Role"/>
+					<BR />
 					<h:selectOneMenu value="#{registerBean.role}">
    					<f:selectItem itemValue="user" itemLabel="user" />
    					<f:selectItem itemValue="manager" itemLabel="manager" />
@@ -64,7 +66,7 @@
 
                 <div class="form-group text-center">
                     <!--<h:link value="Register Now" outcome="register" /><br />-->
-                    <h:commandButton value="Login" action="#{registerBean.validateUser}" styleClass="btn btn-success btn-login-submit" />
+                    <h:commandButton value="Register" action="#{registerBean.validateUser}" styleClass="btn btn-success btn-login-submit" />
                 </div>
                 <h:outputLabel styleClass="text-align:center;" value="Please ensure database is loaded."/>
             </h:form>

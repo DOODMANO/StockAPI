@@ -10,11 +10,13 @@ import javax.faces.context.FacesContext;
 public class LoginDAO {
 
     public static boolean validate(String username, String password, String role) {
+        DataConnect db = null;
         Connection con = null;
         PreparedStatement ps = null;
 
         try {
-            con = DataConnect.getConnection();
+            db = DataConnect.getInstance();
+            con = db.getCon();
             ps = con.prepareStatement("select * from users where username = ? and password = ? and role = ?");
             ps.setString(1, username);
             ps.setString(2, password);
@@ -28,7 +30,7 @@ public class LoginDAO {
                 //FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("role", rs.getString("role"));
                 //System.out.println("uid: " + rs.getString("uid"));
                 //FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put(key,object);
-                DataConnect.close(con);
+                //DataConnect.close(con);
                 return true;
             }
 

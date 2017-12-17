@@ -212,6 +212,34 @@ public class StockApiBean {
         return "purchase";
     }
 
+    public String watchDbRecord(String symbol) {
+        try {
+            //System.out.println("symbol: " + this.symbol + ", price: " + this.price + "\n");
+            //System.out.println("qty: " + this.qty + ", amt: " + this.amt + "\n");
+        	DataConnect db = null;
+        	db = DataConnect.getInstance();
+            Connection conn = db.getCon();
+            Statement statement = conn.createStatement();
+            
+            //get userid
+            Integer uid = Integer.parseInt((String) FacesContext.getCurrentInstance()
+                    .getExternalContext()
+                    .getSessionMap().get("uid"));
+            
+            System.out.println(uid);
+            System.out.println("symbol:" + symbol);
+            statement.executeUpdate("INSERT INTO `watchlist` (`id`, `uid`, `stock_symbol`) "
+                    + "VALUES (NULL,'" + uid + "','" + symbol + "')");
+            
+            statement.close();
+            //conn.close();
+            FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(FacesMessage.SEVERITY_INFO, "Successfully watched stock",""));
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return "watch";
+    }
+    
     public void installAllTrustingManager() {
         TrustManager[] trustAllCerts;
         trustAllCerts = new TrustManager[]{new X509TrustManager() {

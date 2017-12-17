@@ -45,11 +45,12 @@ public class RegisterBean {
 	}
 
     public String validateUser() {
-        boolean valid = RegisterDAO.validate(username, password, role);
+        boolean valid = RegisterDAO.validate(username, password, role, firstname, lastname, address, phonenumber, email);
         if (valid == true) {
         	if(this.role.equals("user"))
             {
-        		return "userhome?faces-redirect=true";
+        		FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(FacesMessage.SEVERITY_WARN, "Registration Successful.",""));
+        		return "index";
             }
         	if(this.role.equals("manager")) //send request to admin
             {
@@ -63,7 +64,7 @@ public class RegisterBean {
         	}
         } else {
             FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(FacesMessage.SEVERITY_WARN, "Something went wrong.",""));
-            return "index";
+            return "register";
         }
     }
 

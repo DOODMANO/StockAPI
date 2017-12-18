@@ -4,7 +4,7 @@
       xmlns:h="http://java.sun.com/jsf/html"
       xmlns:f="http://xmlns.jcp.org/jsf/core">
     <h:head>
-        <title>TODO supply a title</title>
+        <title>User Home</title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 
         <!-- Bootstrap core CSS -->
@@ -21,9 +21,11 @@
                     <div class="col-md-12 col-sm-12 col-lg-12" style="width:100%;text-align:right">
                         <span style="float:left;">
                             <h:panelGroup rendered="#{not empty userBean.username}">
-                                <p>Welcome, User #{userBean.username}</p>
+                                <p>Welcome, #{userBean.role}, #{userBean.username}</p>
                             </h:panelGroup>
                         </span>
+                        <span style="float:right;"><h:link value="History" outcome="history?faces-redirect=true" style="text-align: right;"/></span>
+                        <BR />
                         <span style="float:right;"><h:link value="Watch List" outcome="watchlist?faces-redirect=true" style="text-align: right;"/></span>
                         <BR />
                         <span style="float:right;"><h:link value="Manager List" outcome="managerview?faces-redirect=true" style="text-align: right;"/></span>

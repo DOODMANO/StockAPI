@@ -4,7 +4,7 @@
       xmlns:h="http://java.sun.com/jsf/html"
       xmlns:f="http://xmlns.jcp.org/jsf/core">
     <h:head>
-        <title>Manager View</title>
+        <title>Purchase History</title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 
         <!-- Bootstrap core CSS -->
@@ -21,7 +21,7 @@
                     <div class="col-md-12 col-sm-12 col-lg-12" style="width:100%;text-align:right">
                         <span style="float:left;">
                             <h:panelGroup rendered="#{not empty userBean.username}">
-                                <p>Welcome to the Manager Profiles, #{userBean.username}</p>
+                                <p>Welcome to the Purchase History, #{userBean.username}</p>
                             </h:panelGroup>
                         </span>
                         <span style="float:right;"><h:link value="Back" outcome="userhome" style="text-align: right;"/></span>
@@ -34,58 +34,37 @@
             </h:form>
 
             <div class="well">
-                <legend>Managers Available</legend>
+                <legend>Purchase History</legend>
                		<h:form id="buttonable">
-					<h:dataTable value="#{registerBean.viewManagers()}" var = "manager" border="3">
+					<h:dataTable value="#{stockApiBean.viewHistory(sessionScope.uid)}" var = "stock" border="3">
 					
 					<h:column>
 					<f:facet name="header">
-					First Name
+					Symbol
 					</f:facet>
-					#{manager.firstname}
+					#{stock.symbol}
 					</h:column>
 					
 					<h:column>
 					<f:facet name="header">
-					Last Name
+					Quantity
 					</f:facet>
-					#{manager.lastname}
+					#{stock.qty}
 					</h:column>
 					
 					<h:column>
 					<f:facet name="header">
-					Address
+					Price
 					</f:facet>
-					#{manager.address}
+					#{stock.price}
 					</h:column>
 					
 					<h:column>
 					<f:facet name="header">
-					Phone Number
+					Amount
 					</f:facet>
-					#{manager.phonenumber}
-					</h:column>					
-					
-					<h:column>
-					<f:facet name="header">
-					Email
-					</f:facet>
-					#{manager.email}
-					</h:column>					
-					
-					<h:column>
-					<f:facet name="header">
-					Username
-					</f:facet>
-					#{manager.username}
-					</h:column>					
-					
-					<h:column>
-					<f:facet name="header">
-					Add as Manager
-					</f:facet>
-					<h:commandButton value = "Add as Manager" action="#{registerBean.addManager(sessionScope.username, manager.username)}" styleClass="btn btn-success btn-login-submit"/>
-					</h:column>					
+					#{stock.amt}
+					</h:column>						
 					
 					</h:dataTable>
 					</h:form>

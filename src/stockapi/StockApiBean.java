@@ -206,6 +206,40 @@ public class StockApiBean {
 		this.table4Markup = table4Markup;
 	}
 
+	public List<StockApiBean> viewHistory(int uid){
+	    DataConnect db = null;
+		Connection con = null;
+	    PreparedStatement ps = null;
+	    List<StockApiBean> list = new ArrayList<StockApiBean>();
+	    
+	    
+	    try {
+	        db = DataConnect.getInstance();
+	        con = db.getCon();
+	        
+	        ps = con.prepareStatement("select * from purchase where uid =" + uid);
+	        ResultSet rs = ps.executeQuery();
+	        while(rs.next())
+	        {
+	        	StockApiBean stock = new StockApiBean();
+	        	
+	        	stock.setSymbol(rs.getString("stock_symbol"));
+	        	stock.setQty(rs.getInt("qty"));
+	        	stock.setPrice(rs.getDouble("price"));
+	        	stock.setAmt(rs.getDouble("amt"));
+	        	
+	        	list.add(stock);
+	        }
+	    	return list;
+
+	    } catch (SQLException ex) {
+	        System.out.println("Data Viewing Error: " + ex.getMessage());
+	        return list;
+	    } finally {
+
+	    }
+	}
+	
     public String createDbRecord(String symbol, double price, int qty, double amt) {
         try {
             //System.out.println("symbol: " + this.symbol + ", price: " + this.price + "\n");
@@ -220,6 +254,12 @@ public class StockApiBean {
                     .getExternalContext()
                     .getSessionMap().get("uid"));
             
+            /*
+            ResultSet rs = statement.executeQuery("SELECT * from users WHERE uid =" + uid);
+            double newBalance = rs.getDouble("balance") - price;
+            System.out.println("NEO BALANCE" + newBalance);
+            statement.executeUpdate("UPDATE users SET balance = " + newBalance + " WHERE uid =" + uid);
+            */
             System.out.println(uid);
             System.out.println("symbol:" + symbol);
             System.out.println("price:" + price);
@@ -227,6 +267,8 @@ public class StockApiBean {
             System.out.println("amt:" + amt);
             statement.executeUpdate("INSERT INTO `purchase` (`id`, `uid`, `stock_symbol`, `qty`, `price`, `amt`) "
                     + "VALUES (NULL,'" + uid + "','" + symbol + "','" + qty + "','" + price + "','" + amt +"')");
+            
+
             
             statement.close();
             //conn.close();

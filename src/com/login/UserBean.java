@@ -48,7 +48,7 @@ public class UserBean {
             }
         	if(this.role.equals("manager"))
             {
-        		return "managerhome?faces-redirect=true";
+        		return "userhome?faces-redirect=true";
             }
         	if(this.role.equals("admin"))
             {

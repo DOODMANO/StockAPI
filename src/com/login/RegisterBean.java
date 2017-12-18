@@ -299,5 +299,4 @@ public class RegisterBean {
 		this.uid = uid;
 	}
 
-
 }

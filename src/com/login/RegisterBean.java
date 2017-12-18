@@ -121,6 +121,35 @@ public class RegisterBean {
         }
 	}
 	
+	public String addManager(String username, String usernameManager)
+	{
+		DataConnect db = null;
+        Connection con = null;
+        PreparedStatement ps = null;
+        
+        try {
+            db = DataConnect.getInstance();
+            con = db.getCon();
+            String role = "manager";
+            
+            ps = con.prepareStatement("INSERT INTO addedmanager(username, usernameManager) VALUES(?,?)");
+            ps.setString(1, username);
+            ps.setString(2, usernameManager);     
+            
+            //int rs = ps.executeUpdate();
+            ps.executeUpdate();
+            
+            FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(FacesMessage.SEVERITY_INFO, "Manager has been accepted.",""));
+            return "managerview";
+
+        } catch (SQLException ex) {
+            System.out.println("Add Manager Registration Error -->" + ex.getMessage());
+            return "managerview";
+        } finally {
+
+        }
+	}
+	
 	
 	public List<RegisterBean> viewManagerRegister() {
     //reuse RegisterBean since it has all the aspects of the registered manager
@@ -159,6 +188,43 @@ public class RegisterBean {
 
     }
 }
+	
+	public List<RegisterBean> viewManagers() {
+	    //reuse RegisterBean since it has all the aspects of the registered manager
+	    DataConnect db = null;
+		Connection con = null;
+	    PreparedStatement ps = null;
+	    List<RegisterBean> list = new ArrayList<RegisterBean>();
+	    
+	    try {
+	        db = DataConnect.getInstance();
+	        con = db.getCon();
+	        
+	        ps = con.prepareStatement("select * from users WHERE role = 'manager'");
+	        ResultSet rs = ps.executeQuery();
+	        while(rs.next())
+	        {
+	        	RegisterBean manager = new RegisterBean();
+	        	
+	        	manager.setUid(rs.getInt("uid"));
+	        	manager.setFirstname(rs.getString("firstname"));
+	        	manager.setLastname(rs.getString("lastname"));
+	        	manager.setAddress(rs.getString("address"));
+	        	manager.setPhonenumber(rs.getString("phonenumber"));
+	        	manager.setEmail(rs.getString("email"));
+	        	manager.setUsername(rs.getString("username"));
+	        	
+	        	list.add(manager);
+	        }
+	    	return list;
+
+	    } catch (SQLException ex) {
+	        System.out.println("Data Viewing Error: " + ex.getMessage());
+	        return list;
+	    } finally {
+
+	    }
+	}
 	
     public String validateUser() {
         boolean valid = RegisterDAO.validate(username, password, role, firstname, lastname, address, phonenumber, email);

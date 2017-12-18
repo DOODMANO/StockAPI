@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:head>
+        <title>TODO supply a title</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+        <!-- Bootstrap core CSS -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css"></link>
+
+        <!-- Custom styles for this template -->
+        <link rel="stylesheet" href="css/style.css" ></link>
+
+    </h:head>
+    <h:body>
+        <div class="container">
+            <h:form>
+                <div class="row">
+                    <div class="col-md-12 col-sm-12 col-lg-12" style="width:100%;text-align:right">
+                        <span style="float:left;">
+                            <h:panelGroup rendered="#{not empty userBean.username}">
+                                <p>Welcome to the Manager Profiles, #{userBean.username}</p>
+                            </h:panelGroup>
+                        </span>
+                        <span style="float:right;"><h:link value="Back" outcome="userhome" style="text-align: right;"/></span>
+                        <BR />
+                        <h:form id="logout">
+                        <span style="float:right;"><h:commandLink value="Logout" action="#{userBean.logout()}" style="text-align: right;"/></span>
+                        </h:form>
+                    </div>
+                </div>
+            </h:form>
+
+            <div class="well">
+                <legend>Managers Available</legend>
+               		<h:form id="buttonable">
+					<h:dataTable value="#{registerBean.viewManagers()}" var = "manager" border="3">
+					
+					<h:column>
+					<f:facet name="header">
+					First Name
+					</f:facet>
+					#{manager.firstname}
+					</h:column>
+					
+					<h:column>
+					<f:facet name="header">
+					Last Name
+					</f:facet>
+					#{manager.lastname}
+					</h:column>
+					
+					<h:column>
+					<f:facet name="header">
+					Address
+					</f:facet>
+					#{manager.address}
+					</h:column>
+					
+					<h:column>
+					<f:facet name="header">
+					Phone Number
+					</f:facet>
+					#{manager.phonenumber}
+					</h:column>					
+					
+					<h:column>
+					<f:facet name="header">
+					Email
+					</f:facet>
+					#{manager.email}
+					</h:column>					
+					
+					<h:column>
+					<f:facet name="header">
+					Username
+					</f:facet>
+					#{manager.username}
+					</h:column>					
+					
+					<h:column>
+					<f:facet name="header">
+					Add as Manager
+					</f:facet>
+					<h:commandButton value = "Add as Manager" action="#{registerBean.addManager(sessionScope.uid, manager.uid)}" styleClass="btn btn-success btn-login-submit"/>
+					</h:column>					
+					
+					</h:dataTable>
+					</h:form>
+            </div>
+        </div>
+    </h:body>
+</html>

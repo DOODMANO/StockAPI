@@ -7,6 +7,8 @@ import java.net.URL;
 import java.security.SecureRandom;
 import java.security.cert.X509Certificate;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
@@ -28,6 +30,10 @@ import javax.net.ssl.X509TrustManager;
 import javax.servlet.http.HttpServletRequest;
 
 import com.login.DataConnect;
+import com.login.RegisterBean;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @ManagedBean
 @SessionScoped
@@ -42,6 +48,9 @@ public class StockApiBean {
     private double amt;
     private String table1Markup;
     private String table2Markup;
+    
+    private String table3Markup;
+    private String table4Markup;
 
     private String selectedSymbol;
     private List<SelectItem> availableSymbols;
@@ -180,6 +189,22 @@ public class StockApiBean {
     public void setTable2Markup(String table2Markup) {
         this.table2Markup = table2Markup;
     }
+    
+	public String getTable3Markup() {
+		return table3Markup;
+	}
+
+	public void setTable3Markup(String table3Markup) {
+		this.table3Markup = table3Markup;
+	}
+
+	public String getTable4Markup() {
+		return table4Markup;
+	}
+
+	public void setTable4Markup(String table4Markup) {
+		this.table4Markup = table4Markup;
+	}
 
     public String createDbRecord(String symbol, double price, int qty, double amt) {
         try {
@@ -228,7 +253,7 @@ public class StockApiBean {
             
             System.out.println(uid);
             System.out.println("symbol:" + symbol);
-            statement.executeUpdate("INSERT INTO `watchlist` (`id`, `uid`, `stock_symbol`) "
+            statement.executeUpdate("INSERT INTO `watchlist` (`id`, `uid`, `symbol`) "
                     + "VALUES (NULL,'" + uid + "','" + symbol + "')");
             
             statement.close();
@@ -334,4 +359,124 @@ public class StockApiBean {
         System.out.println("stockPrice" + FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("stockPrice"));
         return;
     }
+    
+    
+    public void watchStock(String symbol) throws MalformedURLException, IOException {
+
+        installAllTrustingManager();
+
+        //String url = "https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&symbol=" + symbol + "&interval=30min&apikey=" + API_KEY;
+        //String symbol = "FB";
+        String url = "https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&symbol="+ symbol +"&interval=30min&apikey=" + API_KEY;
+        //String symbolWatch = "";
+        
+        this.table3Markup += "URL::: <a href='" + url + "'>Data Link</a><br>";
+        InputStream inputStream = new URL(url).openStream();
+
+        // convert the json string back to object
+        JsonReader jsonReader = Json.createReader(inputStream);
+        JsonObject mainJsonObj = jsonReader.readObject();
+        for (String key : mainJsonObj.keySet()) {
+            if (key.equals("Meta Data")) {
+                this.table3Markup = null; // reset table 1 markup before repopulating
+                JsonObject jsob = (JsonObject) mainJsonObj.get(key);
+                this.table3Markup += "<style>#detail >tbody > tr > td{ text-align:center;}</style><b>Stock Details</b>:<br>";
+                this.table3Markup += "<table>";
+                this.table3Markup += "<tr><td>Information</td><td>" + jsob.getString("1. Information") + "</td></tr>";
+                this.table3Markup += "<tr><td>Symbol</td><td>" + jsob.getString("2. Symbol") + "</td></tr>";
+                //symbolWatch = jsob.getString("2. Symbol");
+                this.table3Markup += "<tr><td>Last Refreshed</td><td>" + jsob.getString("3. Last Refreshed") + "</td></tr>";
+                this.table3Markup += "<tr><td>Interval</td><td>" + jsob.getString("4. Interval") + "</td></tr>";
+                this.table3Markup += "<tr><td>Output Size</td><td>" + jsob.getString("5. Output Size") + "</td></tr>";
+                this.table3Markup += "<tr><td>Time Zone</td><td>" + jsob.getString("6. Time Zone") + "</td></tr>";
+                this.table3Markup += "</table>";
+            } else {
+                this.table4Markup = null; // reset table 2 markup before repopulating
+                JsonObject dataJsonObj = mainJsonObj.getJsonObject(key);
+                this.table4Markup += "<table class='table table-hover'>";
+                this.table4Markup += "<thead><tr><th>Timestamp</th><th>Open</th><th>High</th><th>Low</th><th>Close</th><th>Volume</th></tr></thead>";
+                this.table4Markup += "<tbody>";
+                int i = 0;
+                for (String subKey : dataJsonObj.keySet()) {
+                    JsonObject subJsonObj = dataJsonObj.getJsonObject(subKey);
+                    this.table4Markup
+                            += "<tr>"
+                            + "<td>" + subKey + "</td>"
+                            + "<td>" + subJsonObj.getString("1. open") + "</td>"
+                            + "<td>" + subJsonObj.getString("2. high") + "</td>"
+                            + "<td>" + subJsonObj.getString("3. low") + "</td>"
+                            + "<td>" + subJsonObj.getString("4. close") + "</td>"
+                            + "<td>" + subJsonObj.getString("5. volume") + "</td>";
+                    this.table4Markup += "</tr>";
+                    i++;
+                    if(i == 1)
+                    {
+                    	break;
+                    }
+                }
+                this.table4Markup += "</tbody></table>";
+            }
+        }
+        return;
+    }
+    
+	public List<StockApiBean> viewWatchedStocks(int uid){
+	    DataConnect db = null;
+		Connection con = null;
+	    PreparedStatement ps = null;
+	    List<StockApiBean> list = new ArrayList<StockApiBean>();
+	    
+	    
+	    try {
+	        db = DataConnect.getInstance();
+	        con = db.getCon();
+	        
+	        ps = con.prepareStatement("select * from watchlist where uid =" + uid);
+	        ResultSet rs = ps.executeQuery();
+	        while(rs.next())
+	        {
+	        	StockApiBean stock = new StockApiBean();
+	        	
+	        	stock.setSymbol(rs.getString("symbol"));
+	        	
+	        	list.add(stock);
+	        }
+	    	return list;
+
+	    } catch (SQLException ex) {
+	        System.out.println("Data Viewing Error: " + ex.getMessage());
+	        return list;
+	    } finally {
+
+	    }
+	}
+	
+	public String removeWatch(String symbol, int uid)
+	{
+		System.out.println(symbol + "<- trytr ->" + uid);
+		DataConnect db = null;
+        Connection con = null;
+        PreparedStatement ps = null;
+        
+        try {
+            db = DataConnect.getInstance();
+            con = db.getCon();
+            
+            System.out.println(symbol + "<- symbol and uid ->" + uid);
+            String sql = "DELETE FROM watchlist WHERE uid=" + uid + "AND symbol =" + symbol;
+            
+            ps= con.prepareStatement(sql); 
+            ps.executeUpdate();
+            FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(FacesMessage.SEVERITY_INFO, "Stock has been deleted.",""));
+            return "watchlist";
+
+        } catch (SQLException ex) {
+            System.out.println("Unwatch Error -->" + ex.getMessage());
+            return "watchlist";
+        } finally {
+
+        }
+	}
+
+
 }

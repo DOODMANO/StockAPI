@@ -24,7 +24,13 @@
                                 <p>Welcome, User #{userBean.username}</p>
                             </h:panelGroup>
                         </span>
+                        <span style="float:right;"><h:link value="Watch List" outcome="watchlist?faces-redirect=true" style="text-align: right;"/></span>
+                        <BR />
+                        <span style="float:right;"><h:link value="Manager List" outcome="managerview?faces-redirect=true" style="text-align: right;"/></span>
+                        <BR />
+                        <h:form id="logout">
                         <span style="float:right;"><h:commandLink value="Logout" action="#{userBean.logout()}" style="text-align: right;"/></span>
+                        </h:form>
                     </div>
                 </div>
             </h:form>
